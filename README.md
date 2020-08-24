@@ -1,5 +1,10 @@
 # Minotaur: A pythonic, asynchronous, inotify interface
 
+<div align="center">
+  [![PyPI version](https://img.shields.io/pypi/v/minotaur?label=pypi)](https://shields.io/)
+</div>
+
+
 ## Examples
 
 Minotaur provides the `Inotify` class which is to be used as a context
