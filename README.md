@@ -92,7 +92,7 @@ optional arguments:
    `os.fsencode()` and `os.fsdecode()`
 
 4. Async interface supports multiple concurrent waiters. Waiting tasks are
-   woken in a first-come, first-sever manner.
+   woken in a first-come, first-serve manner.
 
 5. Users can chose between different levels of support:
    1. Raw syscall interface
