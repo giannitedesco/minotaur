@@ -94,7 +94,7 @@ optional arguments:
 4. Async interface supports multiple concurrent waiters. Waiting tasks are
    woken in a first-come, first-serve manner.
 
-5. Users can chose between different levels of support:
+5. Users can choose between different levels of support:
    1. Raw syscall interface
    2. Low-level inotify object, which takes care of path encoding, reading of
 	raw inotify data, parsing of binary events in to python objects, and
@@ -142,7 +142,7 @@ Well, this can perhaps be explained best by referring to some of the others:
 5. `python-inotify`: It's packaged by RedHat but, similarly to
    `python_inotify` the read() syscall is done in the C extension so it
    doesn't support `asyncio`, and can't easily be adapted to do so without
-   changing the interface or duplicating functionality
+   changing the interface or duplicating functionality.
 
 6. `asyncinotify`: Easily the best of the bunch. The main downside is that it
    doesn't provide a synchronous interface or low-level interfaces.
