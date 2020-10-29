@@ -1,7 +1,7 @@
 # Minotaur: A pythonic, asynchronous, inotify interface
 
 <div align="center">
-  [![PyPI version](https://img.shields.io/pypi/v/minotaur?label=pypi)](https://shields.io/)
+  <img src="https://img.shields.io/pypi/v/minotaur?label=pypi" alt="PyPI version">
 </div>
 
 
