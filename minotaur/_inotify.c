@@ -11,8 +11,10 @@ static PyObject *_inotify_init(PyObject *self, PyObject *args)
 		return NULL;
 
 	ret = inotify_init1(flags);
+	if (ret < 0) {
+		return PyErr_SetFromErrno(PyExc_OSError);
+	}
 
-	/* FIXME: raise OSError if this fails */
 	return PyLong_FromLong(ret);
 }
 
