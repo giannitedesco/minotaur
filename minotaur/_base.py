@@ -42,7 +42,7 @@ class InotifyBase:
             if loop is None:
                 loop = asyncio.get_event_loop()
             self._loop = loop
-            self._waitq: Deque[asyncio.Future] = deque()
+            self._waitq: Deque[asyncio.Future[None]] = deque()
         else:
             self._loop = None
 

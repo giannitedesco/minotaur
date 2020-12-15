@@ -53,7 +53,7 @@ class Notification(ABC):
         return f'{type(self).__name__}({self._type.name} {t} {self._path})'
 
     @classmethod
-    def create(cls, path: Path, mask: Mask):
+    def create(cls, path: Path, mask: Mask) -> 'Notification':
         return cls(path,
                    mask & Mask.EVENT_TYPE,
                    bool(mask & Mask.ISDIR),
