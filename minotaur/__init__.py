@@ -1,5 +1,5 @@
 """
-Minotaur. A python, asynchronous, inotify interface.
+Minotaur. A pythonic, asynchronous, inotify interface.
 """
 
 from .__version__ import \
