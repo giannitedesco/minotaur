@@ -3,6 +3,10 @@
 
 #include <sys/inotify.h>
 
+#ifndef IN_MASK_CREATE
+#define IN_MASK_CREATE 0x10000000 /* new in Linux 4.19 */
+#endif
+
 static PyObject *_inotify_init(PyObject *self, PyObject *args)
 {
 	int flags = 0, ret;
