@@ -10,14 +10,7 @@ class Mask(_IntFlag):
     show_help: bool
 
     def __new__(cls, value, doc=None, show_help=True):
-        # int.__new__ needs a stub in the typeshed
-        # https://github.com/python/typeshed/issues/2686
-        #
-        # but that broke something else, so they removed it
-        # https://github.com/python/typeshed/issues/1464
-        #
-        # We have no choice but to ignore mypy error here :(
-        self = int.__new__(cls, value)  # type: ignore
+        self = int.__new__(cls, value)
         self._value_ = value
         if doc is not None:
             self.__doc__ = doc
