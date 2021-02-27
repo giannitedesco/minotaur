@@ -23,6 +23,15 @@ add_watch = _inotify.add_watch
 rm_watch = _inotify.rm_watch
 
 __all__ = (
+    '__title__',
+    '__description__',
+    '__url__',
+    '__author__',
+    '__author_email__',
+    '__copyright__',
+    '__license__',
+    '__version__',
+
     'Mask',
     'Inotify',
     'InotifyBase',

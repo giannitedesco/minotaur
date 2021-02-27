@@ -7,6 +7,7 @@ exec 1>&2
 pkgname='minotaur'
 scripts=setup.py
 
+mypy --strict ${pkgname}
 mypy \
 	--disallow-any-generics \
 	--warn-redundant-casts \
@@ -16,7 +17,7 @@ mypy \
 	--check-untyped-defs \
 	--no-implicit-optional \
 	--ignore-missing \
-	${pkgname} ${scripts}
+	${scripts}
 
 pycodestyle-3 \
 	${pkgname}

@@ -1,4 +1,4 @@
-from typing import Sequence
+from typing import Sequence, Type
 from argparse import ArgumentParser, RawTextHelpFormatter
 from pathlib import Path
 from functools import reduce
@@ -6,14 +6,17 @@ from operator import or_
 import asyncio
 import re
 
-from minotaur import Inotify, Mask, Minotaur
+from minotaur import Inotify, Mask, Minotaur, InotifyBase
 from minotaur import __title__
 
 
 _splitter = re.compile(r'[,\.|:\-\s]+')
 
 
-def _sync_main(cls, dirs: Sequence[Path], mask: Mask):
+def _sync_main(cls: Type[InotifyBase],
+               dirs: Sequence[Path],
+               mask: Mask,
+               ) -> None:
     with cls() as n:
         for p in dirs:
             wd = n.add_watch(p, mask)
@@ -23,7 +26,10 @@ def _sync_main(cls, dirs: Sequence[Path], mask: Mask):
             print(evt)
 
 
-async def _task(cls, dirs: Sequence[Path], mask: Mask):
+async def _task(cls: Type[InotifyBase],
+                dirs: Sequence[Path],
+                mask: Mask,
+                ) -> None:
     with cls(blocking=False) as n:
         for p in dirs:
             wd = n.add_watch(p, mask)
@@ -33,7 +39,10 @@ async def _task(cls, dirs: Sequence[Path], mask: Mask):
             print(evt)
 
 
-def _async_main(cls, dirs: Sequence[Path], mask: Mask):
+def _async_main(cls: Type[InotifyBase],
+                dirs: Sequence[Path],
+                mask: Mask,
+                ) -> None:
     loop = asyncio.get_event_loop()
     coro = _task(cls, dirs, mask)
     task = loop.create_task(coro)
@@ -53,7 +62,7 @@ A summary of inotify watch flags:
 _default_mask = 'create,delete,delete_self,moved_from,moved_to'
 
 
-def _main():
+def _main() -> None:
     opts = ArgumentParser(prog=__title__,
                           formatter_class=RawTextHelpFormatter,
                           description=_prog_desc)

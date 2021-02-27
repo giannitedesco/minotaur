@@ -1,3 +1,4 @@
+from typing import Optional
 from enum import IntFlag as _IntFlag
 
 from . import _inotify
@@ -9,7 +10,10 @@ __all__ = ('Mask',)
 class Mask(_IntFlag):
     show_help: bool
 
-    def __new__(cls, value, doc=None, show_help=True):
+    def __new__(cls,
+                value: int,
+                doc: Optional[str] = None,
+                show_help: bool = True) -> 'Mask':
         self = int.__new__(cls, value)
         self._value_ = value
         if doc is not None:

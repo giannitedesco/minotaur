@@ -1,5 +1,6 @@
-from typing import Deque, Optional
+from typing import Deque, Optional, Type, Literal, Any
 from pathlib import Path
+from types import TracebackType
 from collections import deque
 from io import DEFAULT_BUFFER_SIZE
 from struct import Struct
@@ -30,9 +31,10 @@ class InotifyBase:
     _event_sz = _event.size
 
     def __init__(self,
-                 blocking=True,
-                 cloexec=True,
-                 loop: Optional[asyncio.AbstractEventLoop] = None):
+                 blocking: bool = True,
+                 cloexec: bool = True,
+                 loop: Optional[asyncio.AbstractEventLoop] = None,
+                 ) -> None:
 
         self._nonblock = not blocking
         self._cloexec = cloexec
@@ -53,7 +55,7 @@ class InotifyBase:
         """
         return self._fd < 0
 
-    def open(self):
+    def open(self) -> None:
         """
         Create the inotify fd
         """
@@ -63,23 +65,23 @@ class InotifyBase:
         ce = self._cloexec and _inotify.IN_CLOEXEC
         self._fd = _inotify.init(nb | ce)
 
-    def _check_open(self):
+    def _check_open(self) -> None:
         if self.closed:
             raise ValueError("I/O operation on closed file.")
 
-    def _register_for_read(self):
+    def _register_for_read(self) -> None:
         self._check_open()
         assert(self._nonblock)
         assert(self._loop is not None)
         self._loop.add_reader(self._fd, self._fd_readable)
 
-    def _unregister_for_read(self):
+    def _unregister_for_read(self) -> None:
         self._check_open()
         assert(self._nonblock)
         assert(self._loop is not None)
         self._loop.remove_reader(self._fd)
 
-    def _fd_readable(self):
+    def _fd_readable(self) -> None:
         """
         Callback for asyncio when the inotify fd has become readable
         """
@@ -92,7 +94,7 @@ class InotifyBase:
                 w.set_result(None)
                 break
 
-    def close(self):
+    def close(self) -> None:
         """
         Close the inotify fd
 
@@ -118,15 +120,19 @@ class InotifyBase:
                 if not w.done():
                     w.set_result(None)
 
-    def __del__(self):
+    def __del__(self) -> None:
         self.close()
 
-    def __enter__(self):
+    def __enter__(self) -> 'InotifyBase':
         self.open()
         return self
 
-    def __exit__(self, exc_type, exc_val, traceback):
+    def __exit__(self,
+                 exc_type: Optional[Type[BaseException]],
+                 exc_val: Optional[BaseException],
+                 traceback: Optional[TracebackType]) -> Literal[False]:
         self.close()
+        return False
 
     def add_watch(self, p: Path, mask: Mask) -> int:
         """
@@ -190,7 +196,7 @@ class InotifyBase:
 
         return bytes(result)
 
-    def __iter__(self):
+    def __iter__(self) -> 'InotifyBase':
         self._check_open()
 
         if self._nonblock:
@@ -202,7 +208,7 @@ class InotifyBase:
         self._buf = b''
         return self
 
-    def __aiter__(self):
+    def __aiter__(self) -> 'InotifyBase':
         self._check_open()
 
         if not self._nonblock:
@@ -285,6 +291,12 @@ class InotifyBase:
                 await wake
 
         return None
+
+    def __next__(self) -> Any:
+        raise NotImplementedError
+
+    async def __anext__(self) -> Any:
+        raise NotImplementedError
 
 
 class Inotify(InotifyBase):

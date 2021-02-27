@@ -1,4 +1,4 @@
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Any, Optional
 from pathlib import Path
 from abc import ABC, abstractmethod
 
@@ -48,7 +48,7 @@ class Notification(ABC):
     def path(self) -> Path:
         return self._path
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         t = self._isdir and 'dir' or 'file'
         return f'{type(self).__name__}({self._type.name} {t} {self._path})'
 
@@ -80,8 +80,12 @@ class Minotaur(InotifyBase):
     _wdmap: Dict[int, Path]
     _cmap: Dict[Tuple[int, int], Event]
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self,
+                 blocking: bool = True,
+                 cloexec: bool = True,
+                 loop: Optional[asyncio.AbstractEventLoop] = None,
+                 ) -> None:
+        super().__init__(blocking, cloexec, loop)
         self._wdmap = {}
         self._cmap = {}
 
@@ -102,7 +106,7 @@ class Minotaur(InotifyBase):
         else:
             del self._wdmap[wd]
 
-    def _resolve_path(self, wd: int, name: Path):
+    def _resolve_path(self, wd: int, name: Path) -> Path:
         try:
             base_dir = self._wdmap[wd]
         except KeyError:
