@@ -19,7 +19,4 @@ mypy \
 	--ignore-missing \
 	${scripts}
 
-pycodestyle-3 \
-	${pkgname}
-
-#./unit-tests.sh
+flake8 ${pkgname} ${scripts}

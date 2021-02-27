@@ -5,7 +5,7 @@ from pathlib import Path
 import setuptools
 
 _c_extension = setuptools.Extension('minotaur._inotify',
-                                    ['minotaur/_inotify.c',])
+                                    ['minotaur/_inotify.c', ])
 
 version_file = Path('minotaur/__version__.py')
 v: Dict[str, Any] = {}
@@ -29,7 +29,7 @@ setuptools.setup(
         'minotaur',
     ],
     url=v['__url__'],
-    ext_modules=[_c_extension,],
+    ext_modules=[_c_extension, ],
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',

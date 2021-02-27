@@ -1,6 +1,5 @@
-from typing import Dict, Tuple, Any, Optional
+from typing import Dict, Tuple, Optional
 from pathlib import Path
-from abc import ABC, abstractmethod
 
 import asyncio
 
@@ -11,7 +10,7 @@ from ._base import InotifyBase
 __all__ = ('Minotaur',)
 
 
-class Notification(ABC):
+class Notification:
     __slots__ = (
         '_path',
         '_type',
