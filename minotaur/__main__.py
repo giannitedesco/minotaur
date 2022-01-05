@@ -43,10 +43,7 @@ def _async_main(cls: Type[InotifyBase],
                 dirs: Sequence[Path],
                 mask: Mask,
                 ) -> None:
-    loop = asyncio.get_event_loop()
-    coro = _task(cls, dirs, mask)
-    task = loop.create_task(coro)
-    loop.run_until_complete(task)
+    asyncio.run(_task(cls, dirs, mask))
 
 
 _mask_help = '\n'.join((f' - {x.name}: {x.__doc__}'
