@@ -54,7 +54,7 @@ class InotifyBase:
         Create the inotify fd
         """
 
-        assert(self._fd < 0)
+        assert self._fd < 0
         nb = self._nonblock and _inotify.IN_NONBLOCK
         ce = self._cloexec and _inotify.IN_CLOEXEC
         self._fd = _inotify.init(nb | ce)
@@ -65,13 +65,13 @@ class InotifyBase:
 
     def _register_for_read(self) -> None:
         self._check_open()
-        assert(self._nonblock)
+        assert self._nonblock
         loop = asyncio.get_running_loop()
         loop.add_reader(self._fd, self._fd_readable)
 
     def _unregister_for_read(self) -> None:
         self._check_open()
-        assert(self._nonblock)
+        assert self._nonblock
         loop = asyncio.get_running_loop()
         loop.remove_reader(self._fd)
 
