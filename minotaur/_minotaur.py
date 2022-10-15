@@ -91,8 +91,9 @@ class Minotaur(InotifyBase):
         return wd
 
     def rm_watch(self, wd: int) -> int:
-        return super().rm_watch(wd)
+        ret = super().rm_watch(wd)
         del self._wdmap[wd]
+        return ret
 
     def _resolve_path(self, wd: int, name: Path) -> Path:
         try:
