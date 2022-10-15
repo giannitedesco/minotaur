@@ -103,10 +103,7 @@ class InotifyBase:
 
         if self._nonblock:
             loop = asyncio.get_running_loop()
-            try:
-                loop.remove_reader(self._fd)
-            except ValueError:
-                pass
+            loop.remove_reader(self._fd)
 
             while self._waitq:
                 w = self._waitq.popleft()
