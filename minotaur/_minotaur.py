@@ -86,21 +86,13 @@ class Minotaur(InotifyBase):
         self._cmap = {}
 
     def add_watch(self, p: Path, mask: Mask) -> int:
-        try:
-            wd = super().add_watch(p, mask)
-        except Exception:
-            raise
-        else:
-            self._wdmap[wd] = p.resolve()
+        wd = super().add_watch(p, mask)
+        self._wdmap[wd] = p.resolve()
         return wd
 
     def rm_watch(self, wd: int) -> int:
-        try:
-            return super().rm_watch(wd)
-        except Exception:
-            raise
-        else:
-            del self._wdmap[wd]
+        return super().rm_watch(wd)
+        del self._wdmap[wd]
 
     def _resolve_path(self, wd: int, name: Path) -> Path:
         try:
