@@ -21,14 +21,13 @@ class InotifyBase:
         '_cloexec',
         '_fd',
         '_buf',
-        '_loop',
         '_waitq',
     )
 
-    _loop: Optional[asyncio.AbstractEventLoop]
-
     _event = Struct('=iIII')
     _event_sz = _event.size
+
+    _waitq: Deque[asyncio.Future[None]]
 
     def __init__(self,
                  blocking: bool = True,
@@ -41,12 +40,7 @@ class InotifyBase:
         self._fd = -1
 
         if self._nonblock:
-            if loop is None:
-                loop = asyncio.get_running_loop()
-            self._loop = loop
-            self._waitq: Deque[asyncio.Future[None]] = deque()
-        else:
-            self._loop = None
+            self._waitq = deque()
 
     @property
     def closed(self) -> bool:
@@ -72,14 +66,14 @@ class InotifyBase:
     def _register_for_read(self) -> None:
         self._check_open()
         assert(self._nonblock)
-        assert(self._loop is not None)
-        self._loop.add_reader(self._fd, self._fd_readable)
+        loop = asyncio.get_running_loop()
+        loop.add_reader(self._fd, self._fd_readable)
 
     def _unregister_for_read(self) -> None:
         self._check_open()
         assert(self._nonblock)
-        assert(self._loop is not None)
-        self._loop.remove_reader(self._fd)
+        loop = asyncio.get_running_loop()
+        loop.remove_reader(self._fd)
 
     def _fd_readable(self) -> None:
         """
@@ -101,24 +95,25 @@ class InotifyBase:
         This will wake all asynchronous waiters.
         """
 
-        if not self.closed:
-            try:
-                _os.close(self._fd)
-            finally:
-                self._fd = -1
+        if self.closed:
+            return
 
-        # Must wake all waiters to let them exit their loops now that we're
-        # closed
-        if self._loop:
-            assert(self._loop is not None)
+        if self._nonblock:
+            loop = asyncio.get_running_loop()
             try:
-                self._loop.remove_reader(self._fd)
+                loop.remove_reader(self._fd)
             except ValueError:
                 pass
+
             while self._waitq:
                 w = self._waitq.popleft()
                 if not w.done():
                     w.set_result(None)
+
+        try:
+            _os.close(self._fd)
+        finally:
+            self._fd = -1
 
     def __del__(self) -> None:
         self.close()
@@ -214,9 +209,6 @@ class InotifyBase:
         if not self._nonblock:
             raise ValueError("Async iiter used on blocking inotify")
 
-        if not self._loop:
-            raise ValueError("No event loop for async iter")
-
         if hasattr(self, '_buf'):
             raise ValueError("Concurrent iteration on inotify fd")
 
@@ -282,11 +274,11 @@ class InotifyBase:
                 return ret
 
             if not self._fill_buffer(-1):
-                assert(self._loop is not None)
+                loop = asyncio.get_running_loop()
 
                 if not self._waitq:
                     self._register_for_read()
-                wake = self._loop.create_future()
+                wake = loop.create_future()
                 self._waitq.append(wake)
                 await wake
 
