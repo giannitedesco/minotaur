@@ -198,7 +198,7 @@ class InotifyBase:
             raise ValueError("Synchronous iiter used on non-blocking inotify")
 
         if hasattr(self, '_buf'):
-            raise ValueError("Concurrent iteration on inotify fd")
+            raise RuntimeError("Concurrent iteration on inotify fd")
 
         self._buf = b''
         return self
@@ -210,7 +210,7 @@ class InotifyBase:
             raise ValueError("Async iiter used on blocking inotify")
 
         if hasattr(self, '_buf'):
-            raise ValueError("Concurrent iteration on inotify fd")
+            raise RuntimeError("Concurrent iteration on inotify fd")
 
         self._buf = b''
         return self
