@@ -27,6 +27,10 @@ class InotifyBase:
     _event = Struct('=iIII')
     _event_sz = _event.size
 
+    _nonblock: bool
+    _cloexec: bool
+    _fd: int
+    _buf: bytes
     _waitq: Deque[asyncio.Future[None]]
 
     def __init__(self,
