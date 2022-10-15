@@ -36,7 +36,6 @@ class InotifyBase:
     def __init__(self,
                  blocking: bool = True,
                  cloexec: bool = True,
-                 loop: Optional[asyncio.AbstractEventLoop] = None,
                  ) -> None:
 
         self._nonblock = not blocking

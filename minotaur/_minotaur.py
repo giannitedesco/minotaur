@@ -1,7 +1,5 @@
-from typing import Dict, Tuple, Optional
+from typing import Dict, Tuple
 from pathlib import Path
-
-import asyncio
 
 from ._mask import Mask
 from ._event import Event
@@ -82,9 +80,8 @@ class Minotaur(InotifyBase):
     def __init__(self,
                  blocking: bool = True,
                  cloexec: bool = True,
-                 loop: Optional[asyncio.AbstractEventLoop] = None,
                  ) -> None:
-        super().__init__(blocking, cloexec, loop)
+        super().__init__(blocking, cloexec)
         self._wdmap = {}
         self._cmap = {}
 
