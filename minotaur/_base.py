@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import Deque, Optional, Type, Literal, Any
 from pathlib import Path
 from types import TracebackType
