@@ -7,7 +7,6 @@ import asyncio
 import re
 
 from minotaur import Inotify, Mask, Minotaur, InotifyBase
-from minotaur import __title__
 
 
 _splitter = re.compile(r'[,\.|:\-\s]+')
@@ -60,7 +59,7 @@ _default_mask = 'create,delete,delete_self,moved_from,moved_to'
 
 
 def _main() -> None:
-    opts = ArgumentParser(prog=__title__,
+    opts = ArgumentParser(prog='minotaur',
                           formatter_class=RawTextHelpFormatter,
                           description=_prog_desc)
 

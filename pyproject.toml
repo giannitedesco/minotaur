@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "minotaur"
+version = "0.2.0"
+description = "Pythonic, asynchronous, inotify interface."
+readme = "README.md"
+requires-python = ">=3.5"
+license = { text = "Apache 2.0" }
+authors = [
+    { name = "Gianni Tedesco", email = "gianni@scaramanga.co.uk" }
+]
+maintainers = [
+    { name = "Gianni Tedesco", email = "gianni@scaramanga.co.uk" }
+]
+keywords = ["inotify", "asynchronous", "linux", "file system"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Operating System :: POSIX :: Linux",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: Implementation :: CPython"
+]
+
+[project.urls]
+Homepage = "https://github.com/giannitedesco/minotaur"
+
+# [project.optional-dependencies]
+# test = ["green", "coverage"]
+
+[tool.green]
+run-coverage = true
+verbose = 2
+
+[tool.setuptools]
+packages = ["minotaur"]
+include-package-data = true
+platforms = ["Linux"]
+ext-modules = [
+ {name = "minotaur._inotify", sources = ["minotaur/_inotify.c"]}
+]
+
+[tool.setuptools.package-data]
+minotaur = ["py.typed"]

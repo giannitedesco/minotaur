@@ -5,8 +5,13 @@ set -euo pipefail
 exec 1>&2
 
 pkgname='minotaur'
-scripts=setup.py
+scripts=
 
 mypy --strict ${pkgname} ${scripts}
 
-flake8 ${pkgname} ${scripts}
+bandit \
+	${pkgname} ${scripts}
+
+flake8 ${pkgname}
+
+# green
