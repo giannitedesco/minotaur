@@ -1,4 +1,3 @@
-from typing import Dict, Tuple
 from pathlib import Path
 
 from ._mask import Mask
@@ -74,8 +73,8 @@ class Minotaur(InotifyBase):
         '_cmap',
     )
 
-    _wdmap: Dict[int, Path]
-    _cmap: Dict[Tuple[int, int], Event]
+    _wdmap: dict[int, Path]
+    _cmap: dict[tuple[int, int], Event]
 
     def __init__(self,
                  blocking: bool = True,
